@@ -19,6 +19,11 @@ yarn add role-permissions-bd
 npm i role-permissions-bd --save
 ```
 
+## Outra Library (Frontend) React JS
+
+A Lib carrega os dados que vem do backend em um formato e mostra em tela para criar e editar.
+Open [https://www.npmjs.com/package/role-permissions-react](role-permissions-react)
+
 ## Usage
 
 Ainda Criando conteúdo
