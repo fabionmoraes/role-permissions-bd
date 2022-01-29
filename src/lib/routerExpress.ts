@@ -1,12 +1,14 @@
-import { Router } from "express";
+import { Request } from "express";
+import { nodeExpress } from "./routerExpressNode";
 
-export default function routerExpress(router: Router) {
-  return router.stack
-    .map((layer) => {
+export default function routerExpress(request: Request) {
+  const routers = request.app._router.stack
+    .map((layer: any) => {
       if (layer.route) {
         const path = layer.route?.path;
         const method = layer.route?.stack[0].method;
-        const alterMethod = method === "patch" ? "update" : method;
+        const methodPatch = method === "patch" ? "update" : method;
+        const alterMethod = methodPatch === "put" ? "update" : methodPatch;
 
         if (!path.includes("auth") && !path.includes("me")) {
           return {
@@ -16,6 +18,12 @@ export default function routerExpress(router: Router) {
         }
       }
     })
-    .filter((item) => item !== undefined)
-    .filter((item) => item?.name !== undefined);
+    .filter((item: any) => item !== undefined)
+    .filter((item: any) => item?.name !== undefined);
+
+  if (routers.length === 0) {
+    return nodeExpress(request);
+  }
+
+  return routers;
 }

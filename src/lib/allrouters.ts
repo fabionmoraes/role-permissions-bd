@@ -11,7 +11,7 @@ export function AllRouters(request: Request, data?: IProps): AllRoutersProps[] {
   const permissions: any[] = [];
   const removeDuplicate: any[] = [];
   const methods: any[] = [];
-  const routers = routerExpress(request.app._router);
+  const routers = routerExpress(request);
 
   routers.forEach((r: any) => {
     if (methods.length) {

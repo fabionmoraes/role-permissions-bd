@@ -14,13 +14,11 @@ interface IPermission extends IProps {
 export const Permissions = (request: Request, data: IPermissions) => {
   const { roles, exclude } = data;
 
-  const router = request.app._router;
-
   const rolesFilter = roles.filter((item) => item.slug !== "admin");
 
   const removeDuplicatePermissions: any[] = [];
 
-  const routers = routerExpress(router);
+  const routers = routerExpress(request);
 
   const rolesMap = rolesFilter.map((item) => ({
     ...item,
@@ -57,9 +55,8 @@ export const Permission = (request: Request, data: IPermission) => {
 
   const getRole = role;
   const removeDuplicatePermissions: any[] = [];
-  const router = request.app._router;
 
-  const routers = routerExpress(router);
+  const routers = routerExpress(request);
 
   getRole.permissions = role.permissions ? JSON.parse(role.permissions) : [];
 
