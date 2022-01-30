@@ -1,5 +1,9 @@
 # role-permissions-bd - Backend
 
+## express Compatibility
+
+Role Permissions é testado e tem total compatibilidade com express 4x.
+
 ## O que a lib faz?
 
 A Lib retorna de uma forma fácil as permissões de todas as rotas Express
@@ -23,14 +27,6 @@ npm i role-permissions-bd --save
 
 A Lib carrega os dados que vem do backend em um formato e mostra em tela para criar e editar.
 Open [role-permissions-react](https://www.npmjs.com/package/role-permissions-react)
-
-## Usage
-
-Ainda Criando conteúdo
-
-```ts
-Ainda criando...
-```
 
 ## Utilização da Library NestJS
 
@@ -132,4 +128,120 @@ export class RolesController {
 
 ## Utilização da Library NodeJS
 
--Criando Conteúdo
+### Middleware
+
+```ts
+//src/middleware/handle
+import { Request, Response, NextFunction } from "express";
+import { container } from "tsyringe";
+import { NextPermission } from "role-permissions-bd";
+
+import { AppError } from "@config/AppError";
+import { jwtVerify } from "@config/jwt";
+import { FindOneUserByIdService } from "@modules/users/services/FindOneUserByIdService";
+
+export default class RolePermissionsMiddleware {
+  async handle(request: Request, response: Response, next: NextFunction) {
+    const findOneUserByIdService = container.resolve(FindOneUserByIdService);
+
+    const authToken = request.headers.authorization;
+
+    const [, token] = authToken.split(" ");
+
+    const { sub } = jwtVerify(token);
+
+    const user = await findOneUserByIdService.execute(sub);
+
+    const passed = NextPermission({
+      request,
+      userRoles: user.roles,
+    });
+
+    if (passed) {
+      return next();
+    }
+
+    throw new AppError("Not Permission", 403);
+  }
+}
+
+//src/middleware/index
+
+import EnsureAuthenticated from "./handle/ensureAuthenticated";
+import RolePermissions from "./handle/rolePermissions";
+
+const ensureAuthenticated = new EnsureAuthenticated().handle;
+const rolePermissionsMiddleware = new RolePermissions().handle;
+
+export { rolePermissionsMiddleware, ensureAuthenticated };
+```
+
+### Controllers
+
+```ts
+import { Request, Response } from "express";
+
+import { AllRouters, Permissions, Permission } from "role-permissions-bd";
+import { container } from "tsyringe";
+
+import { FindOneRoleByIdService } from "@modules/roles/services/FindOneRoleByIdService";
+import { FindAllRoleService } from "@modules/roles/services/FindAllRoleService";
+
+export class PermissionsController {
+  async findAllRouters(request: Request, response: Response) {
+    return response.json(
+      AllRouters(request, { exclude: ["permissions", "auth"] })
+    );
+  }
+
+  async findOneRole(request: Request, response: Response) {
+    const { id } = request.params;
+
+    try {
+      const findOneRoleByIdService = container.resolve(FindOneRoleByIdService);
+      const role = await findOneRoleByIdService.execute(+id);
+
+      return response.json(Permission(request, { role }));
+    } catch (err: any) {
+      return response.sendError(err.message);
+    }
+  }
+
+  async findAllTools(request: Request, response: Response) {
+    const findAllRoleService = container.resolve(FindAllRoleService);
+
+    try {
+      const roles = await findAllRoleService.execute();
+
+      return response.json(
+        Permissions(request, { roles, exclude: ["permissions", "auth"] })
+      );
+    } catch (err: any) {
+      return response.sendError(err.message);
+    }
+  }
+}
+```
+
+### Routes
+
+```ts
+import { Router } from "express";
+import { ensureAuthenticated } from "middleware";
+import { PermissionsController } from "./PermissionsController";
+
+const permissionsRoutes = Router();
+const permissionsController = new PermissionsController();
+
+// permissionsRoutes.use(ensureAuthenticated)
+
+permissionsRoutes.get("/routes", permissionsController.findAllRouters);
+permissionsRoutes.get("/roles", permissionsController.findAllTools);
+permissionsRoutes.get("/roles/:id", permissionsController.findOneRole);
+
+export { permissionsRoutes };
+```
+
+## Example Use Code
+
+...Criando

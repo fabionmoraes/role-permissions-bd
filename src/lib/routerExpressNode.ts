@@ -34,29 +34,27 @@ export function nodeExpress(request: Request) {
   const entryPoint = request.app._router && request.app._router.stack;
   getRoutes(entryPoint);
 
-  const result = storageRouter
+  const alterPermissions: any[] = [];
+
+  storageRouter
     .map((item) => ({
       name: String(item.regexp).split("/")[2].replace("\\", ""),
       permissions: item.routes,
     }))
     .filter((item) => !item.name.includes("?"))
-    .map((item) => {
-      const objectPermission: any = {};
+    .forEach((item) => {
       item.permissions.forEach((p: any) => {
-        Object.keys(p.methods).map((m) => {
+        Object.keys(p.methods).forEach((m) => {
           const methodToUpperCase = m.toUpperCase();
           const methodPatch =
             methodToUpperCase === "PATCH" ? "UPDATE" : methodToUpperCase;
           const method = methodPatch === "PUT" ? "UPDATE" : methodPatch;
-          Object.assign(objectPermission, { [method]: false });
+          const result = { method, name: item.name };
+
+          alterPermissions.push(result);
         });
       });
-
-      return {
-        ...item,
-        permissions: objectPermission,
-      };
     });
 
-  return result;
+  return alterPermissions;
 }
