@@ -1,12 +1,21 @@
 {
   "name": "role-permissions-bd",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Easy permissions backend",
   "main": "dist/index.js",
   "types": "dist/index.d.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/fabionmoraes/role-permissions-bd"
+  },
+  "files": [
+    "dist"
+  ],
+  "jest": {
+    "verbose": true,
+    "coveragePathIgnorePatterns": [
+      "/src/index.ts"
+    ]
   },
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -24,7 +33,7 @@
   ],
   "author": "Fabio Moraes",
   "license": "ISC",
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.0",
