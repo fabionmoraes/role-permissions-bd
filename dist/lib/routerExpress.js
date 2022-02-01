@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var routerExpressNode_1 = require("./routerExpressNode");
 function routerExpress(request) {
-    var routers = request.app._router.stack
+    var routes = request.app._router.stack;
+    var routers = routes
         .map(function (layer) {
         var _a, _b;
         if (layer.route) {
@@ -11,9 +12,10 @@ function routerExpress(request) {
             var methodPatch = method === "patch" ? "update" : method;
             var alterMethod = methodPatch === "put" ? "update" : methodPatch;
             if (!path.includes("auth") && !path.includes("me")) {
+                var pathSplit = path.split("/")[1];
                 return {
                     method: alterMethod.toUpperCase(),
-                    name: path.split("/")[2],
+                    name: pathSplit,
                 };
             }
         }
