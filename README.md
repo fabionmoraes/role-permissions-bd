@@ -41,7 +41,7 @@ import {
   HttpException,
 } from "@nestjs/common";
 import { Observable } from "rxjs";
-import { NextPermission } from "role-permissions-bd";
+import { NextPermission, UserRoles } from "role-permissions-bd";
 
 @Injectable()
 export class PermissionsInterceptor implements NestInterceptor {
@@ -53,7 +53,7 @@ export class PermissionsInterceptor implements NestInterceptor {
 
     const passed = NextPermission({
       request,
-      userRoles: user.roles, // Aqui pega a roles do usuário user_roles
+      userRoles: UserRoles(user.user_roles), // Aqui pega a roles do usuário user_roles
     });
 
     if (passed) {
@@ -68,7 +68,6 @@ export class PermissionsInterceptor implements NestInterceptor {
 ### Controllers
 
 ```ts
-import { Request } from 'express'
 ...
 import { AllRouters, Permissions, Permission } from 'role-permissions-bd'
 
@@ -114,13 +113,13 @@ export class RolesController {
     }
 
     @Get('/one')
-    findAllRoutes(@Request() req: Request) {
+    findAllRoutes(@Request() req) {
         const role = await this.rolesService.findOne(...)
         return Permissions(req, { role, exclude: ['roles'] }) //exclude retira a rota roles para visualizar não sendo obrigatório
     }
 
     @Get('/routes')
-    findAllRoutes(@Request() req: Request) {
+    findAllRoutes(@Request() req) {
         return AllRouters(req) // Aqui Retorna todas rotas como tudo false do exemplo acima
     }
 }
@@ -244,4 +243,5 @@ export { permissionsRoutes };
 
 ## Example Use Code
 
-...Criando
+Open [Segue Exemplo do NestJS](https://github.com/fabionmoraes/use-role-permissions-bd-nestjs)
+NodeJs criando...
