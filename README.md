@@ -53,7 +53,7 @@ export class PermissionsInterceptor implements NestInterceptor {
 
     const passed = NextPermission({
       request,
-      userRoles: UserRoles(user.user_roles), // Aqui pega a roles do usuário user_roles
+      userRoles: UserRoles(user.user_roles), // Aqui pega a roles do usuário user_roles com relacionamento role
     });
 
     if (passed) {
