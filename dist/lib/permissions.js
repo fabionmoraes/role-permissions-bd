@@ -19,9 +19,10 @@ var routerExpress_1 = __importDefault(require("./routerExpress"));
 var permissionsForeach_1 = __importDefault(require("./permissionsForeach"));
 var Permissions = function (request, data) {
     var roles = data.roles, exclude = data.exclude;
+    var prefix = (data === null || data === void 0 ? void 0 : data.exclude_prefix) || "";
     var rolesFilter = roles.filter(function (item) { return item.slug !== "admin"; });
     var removeDuplicatePermissions = [];
-    var routers = (0, routerExpress_1.default)(request);
+    var routers = (0, routerExpress_1.default)(request, prefix);
     var rolesMap = rolesFilter.map(function (item) { return (__assign(__assign({}, item), { permissions: JSON.parse(item.permissions) })); });
     var roleAlter = rolesMap.map(function (role) {
         return (0, permissionsForeach_1.default)(role, routers, removeDuplicatePermissions, exclude);
@@ -37,9 +38,10 @@ var Permissions = function (request, data) {
 exports.Permissions = Permissions;
 var Permission = function (request, data) {
     var role = data.role, exclude = data.exclude;
+    var prefix = (data === null || data === void 0 ? void 0 : data.exclude_prefix) || "";
     var getRole = role;
     var removeDuplicatePermissions = [];
-    var routers = (0, routerExpress_1.default)(request);
+    var routers = (0, routerExpress_1.default)(request, prefix);
     getRole.permissions = role.permissions ? JSON.parse(role.permissions) : [];
     var rolePermission = (0, permissionsForeach_1.default)(getRole, routers, removeDuplicatePermissions, exclude);
     var filterRolesPermissions = rolePermission.permissions.map(function (item) {

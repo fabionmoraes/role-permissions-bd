@@ -28,7 +28,29 @@ npm i role-permissions-bd --save
 A Lib carrega os dados que vem do backend em um formato e mostra em tela para criar e editar.
 Open [role-permissions-react](https://www.npmjs.com/package/role-permissions-react)
 
+## Funcionalidades
+
+### exclude
+
+- O exclude vai retirar a rota que você deseja. Por ex.: ['users', 'roles'] O users e roles serão exluido
+
+```ts
+AllRouters(req, { exlude: ["users", "roles"] });
+```
+
+### exlude_prefix
+
+- O exclude_prefix vai retirar o prefix da url que foi configurado ex.: http.../api { exclude_prefix: 'api } retira
+
+```ts
+AllRouters(req, { exclude_prefix: "api" });
+```
+
 ## Utilização da Library NestJS
+
+## Example Use Code
+
+Open [Segue Exemplo do NestJS](https://github.com/fabionmoraes/use-role-permissions-bd-nestjs)
 
 ### Interceptors
 
@@ -240,8 +262,3 @@ permissionsRoutes.get("/roles/:id", permissionsController.findOneRole);
 
 export { permissionsRoutes };
 ```
-
-## Example Use Code
-
-Open [Segue Exemplo do NestJS](https://github.com/fabionmoraes/use-role-permissions-bd-nestjs)
-NodeJs criando...

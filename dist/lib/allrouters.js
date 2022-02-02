@@ -17,10 +17,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AllRouters = void 0;
 var routerExpress_1 = __importDefault(require("./routerExpress"));
 function AllRouters(request, data) {
+    var prefix = (data === null || data === void 0 ? void 0 : data.exclude_prefix) || "";
     var permissions = [];
     var removeDuplicate = [];
     var methods = [];
-    var routers = (0, routerExpress_1.default)(request);
+    var routers = (0, routerExpress_1.default)(request, prefix);
     routers.forEach(function (r) {
         var _a, _b;
         if (methods.length) {
@@ -51,15 +52,13 @@ function AllRouters(request, data) {
             removeDuplicate.push(p);
         }
     });
-    if (data) {
+    if (data === null || data === void 0 ? void 0 : data.exclude) {
         var exclude = data.exclude;
-        if (exclude) {
-            exclude.forEach(function (item) {
-                var index = removeDuplicate.findIndex(function (i) { return i.name === item; });
-                if (index !== -1)
-                    removeDuplicate.splice(index, 1);
-            });
-        }
+        exclude.forEach(function (item) {
+            var index = removeDuplicate.findIndex(function (i) { return i.name === item; });
+            if (index !== -1)
+                removeDuplicate.splice(index, 1);
+        });
     }
     return removeDuplicate;
 }
