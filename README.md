@@ -32,13 +32,13 @@ Open [role-permissions-react](https://www.npmjs.com/package/role-permissions-rea
 
 ### exclude
 
-- O exclude vai retirar a rota que você deseja. Por ex.: ['users', 'roles'] O users e roles serão exluido
+- O exclude vai retirar a rota que você deseja. Por ex.: ['users', 'roles'] O users e roles serão excluido
 
 ```ts
-AllRouters(req, { exlude: ["users", "roles"] });
+AllRouters(req, { exclude: ["users", "roles"] });
 ```
 
-### exlude_prefix
+### exclude_prefix
 
 - O exclude_prefix vai retirar o prefix da url que foi configurado ex.: http.../api { exclude_prefix: 'api } retira
 
@@ -48,7 +48,7 @@ AllRouters(req, { exclude_prefix: "api" });
 
 ## Utilização da Library NestJS
 
-## Example Use Code
+### Example Use Code
 
 Open [Segue Exemplo do NestJS](https://github.com/fabionmoraes/use-role-permissions-bd-nestjs)
 
