@@ -76,6 +76,7 @@ export class PermissionsInterceptor implements NestInterceptor {
     const passed = NextPermission({
       request,
       userRoles: UserRoles(user.user_roles), // Aqui pega a roles do usuário user_roles com relacionamento role
+      roleNameNext: 'administrator', // Aqui você pode passar uma role name para passar. Por default o nome da role é admin
     });
 
     if (passed) {
