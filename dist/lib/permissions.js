@@ -18,19 +18,22 @@ exports.Permission = exports.Permissions = void 0;
 var routerExpress_1 = __importDefault(require("./routerExpress"));
 var permissionsForeach_1 = __importDefault(require("./permissionsForeach"));
 var Permissions = function (request, data) {
-    var roles = data.roles, exclude = data.exclude;
+    var roles = data.roles, exclude = data.exclude, role_name = data.role_name;
     var prefix = (data === null || data === void 0 ? void 0 : data.exclude_prefix) || "";
-    var rolesFilter = roles.filter(function (item) { return item.slug !== "admin"; });
+    var permissionSlug = role_name || "admin";
+    var rolesFilter = roles.filter(function (item) { return item.slug !== permissionSlug; });
     var removeDuplicatePermissions = [];
     var routers = (0, routerExpress_1.default)(request, prefix);
-    var rolesMap = rolesFilter.map(function (item) { return (__assign(__assign({}, item), { permissions: JSON.parse(item.permissions) })); });
+    var rolesMap = rolesFilter.map(function (item) { return (__assign(__assign({}, item), { permissions: item.permissions ? JSON.parse(item.permissions) : [] })); });
     var roleAlter = rolesMap.map(function (role) {
         return (0, permissionsForeach_1.default)(role, routers, removeDuplicatePermissions, exclude);
     });
     // Percorrer a roles do banco para puxar as permissões
     return roleAlter.map(function (item) { return (__assign(__assign({}, item), { permissions: item.permissions.map(function (p) {
             var getRoles = roles.find(function (r) { return r.slug === item.slug; });
-            var getPermissions = JSON.parse(getRoles.permissions);
+            var getPermissions = getRoles.permissions
+                ? JSON.parse(getRoles.permissions)
+                : [];
             var permission = getPermissions.find(function (pp) { return pp.name === p.name; });
             return __assign(__assign({}, p), { permissions: (permission === null || permission === void 0 ? void 0 : permission.permissions) || p.permissions });
         }) })); });

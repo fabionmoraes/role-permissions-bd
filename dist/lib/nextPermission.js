@@ -8,7 +8,12 @@ var NextPermission = function (_a) {
     if (roleNames.includes(roleNameNext)) {
         return true;
     }
-    var userPermissions = userRoles.map(function (role) { return role.permissions; });
+    var userPermissions = userRoles.map(function (role) {
+        if (typeof role.permissions === "string") {
+            return JSON.parse(role.permissions);
+        }
+        return role.permissions;
+    });
     var permission = userPermissions
         .flat()
         .find(function (item) { return pathname.includes(item.name); });

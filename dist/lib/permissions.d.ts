@@ -2,6 +2,7 @@ import { Request } from "express";
 import { IProps } from "../type";
 interface IPermissions extends IProps {
     roles: any[];
+    role_name?: string;
 }
 interface IPermission extends IProps {
     role: any;
